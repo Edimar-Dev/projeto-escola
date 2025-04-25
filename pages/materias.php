@@ -28,7 +28,13 @@ if (file_exists($caminhoArquivo)) {
     if (!empty($materias)) {
         echo "<ul>";
         foreach ($materias as $materia) {
-            echo "<li>" . htmlspecialchars($materia['nome']) . "</li>";
+            echo "<li>" . htmlspecialchars($materia['nome']) . "
+                <form action='../actions/MateriaController.php' method='POST' style='display:inline; margin-left:10px;'>
+                    <input type='hidden' name='acao' value='excluir'>
+                    <input type='hidden' name='id' value='" . htmlspecialchars($materia['id']) . "'>
+                    <button type='submit' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</button>
+                </form>
+            </li>";
         }
         echo "</ul>";
     } else {
@@ -39,4 +45,4 @@ if (file_exists($caminhoArquivo)) {
 }
 ?>
 
-<?php require_once('../includes/footer.php')?>
+<?php require_once('../includes/footer.php'); ?>

@@ -1,7 +1,7 @@
 <?php require_once('./index.php'); ?>
 
 <div>
-    <h3>TURMAS</h3>
+    <h3>RELAÇÃO DE TURMAS</h3>
     <form action="../actions/TurmaController.php" method="POST">
         <input type="hidden" name="acao" value="cadastrar">
         <label for="turma">Nome da Turma:</label>
@@ -33,7 +33,7 @@ if (file_exists($caminhoArquivo)) {
                     <input type='hidden' name='acao' value='excluir'>
                     <input type='hidden' name='id' value='" . htmlspecialchars($turma['id']) . "'>
                     <button type='submit' onclick='return confirm(\"Tem certeza que deseja excluir esta turma?\")'>Excluir</button>
-                   </form>
+                </form>
                 </li>";
         }
         echo "</ul>";

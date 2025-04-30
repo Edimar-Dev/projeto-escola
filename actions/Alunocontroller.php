@@ -2,15 +2,13 @@
 
 $caminhoArquivo = __DIR__ . '/../data/alunos.json';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'cadastrar') {
 
-    if (file_exists($caminhoArquivo)) {
-        $conteudoArquivo = file_get_contents($caminhoArquivo);
-        $alunos = json_decode($conteudoArquivo, true);
-    } else {
-        $alunos = [];
-    }
+$alunos = file_exists($caminhoArquivo)
+    ? json_decode(file_get_contents($caminhoArquivo), true)
+    : [];
 
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'cadastrar') {
     $nomeAluno = trim($_POST['aluno']);
 
 
@@ -21,14 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
         }
     }
 
-
     $novoAluno = [
         'id' => uniqid(),
         'nome' => $nomeAluno,
     ];
 
     $alunos[] = $novoAluno;
-
 
     file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
 
@@ -37,27 +33,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['ac
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acao']) && $_POST['acao'] === 'excluir' && isset($_POST['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'excluir' && isset($_POST['id'])) {
+    $id = $_POST['id'];
 
-    if (file_exists($caminhoArquivo)) {
-        $conteudoArquivo = file_get_contents($caminhoArquivo);
-        $alunos = json_decode($conteudoArquivo, true);
+    $alunos = array_filter($alunos, fn($aluno) => $aluno['id'] !== $id);
+    $alunos = array_values($alunos); // reorganiza os índices
 
-        $id = $_POST['id'];
-
-
-        $alunos = array_filter($alunos, function($aluno) use ($id) {
-            return $aluno['id'] !== $id;
-        });
-
-
-        $alunos = array_values($alunos);
-
-        file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
-    }
+    file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
 
     header('Location: ../pages/alunos.php?excluido=ok');
     exit;
 }
 
-?>
+
+header('Location: ../pages/alunos.php');
+exit;

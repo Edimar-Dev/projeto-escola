@@ -2,49 +2,56 @@
 
 $caminhoArquivo = __DIR__ . '/../data/alunos.json';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['acao']) && $_POST['acao'] === 'cadastrar') {
 
-$alunos = file_exists($caminhoArquivo)
-    ? json_decode(file_get_contents($caminhoArquivo), true)
-    : [];
+        $nomeAluno = trim($_POST['aluno']);
+        $turmaId = $_POST['turma_id'] ?? null;
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'cadastrar') {
-    $nomeAluno = trim($_POST['aluno']);
-
-
-    foreach ($alunos as $aluno) {
-        if (strtolower($aluno['nome']) === strtolower($nomeAluno)) {
-            header('Location: ../pages/alunos.php?erro=ja-existe');
+        if (empty($nomeAluno) || empty($turmaId)) {
+            header('Location: ../pages/alunos.php?erro=campos-obrigatorios');
             exit;
         }
+
+        if (file_exists($caminhoArquivo)) {
+            $alunos = json_decode(file_get_contents($caminhoArquivo), true);
+        } else {
+            $alunos = [];
+        }
+
+        foreach ($alunos as $aluno) {
+            if (strtolower($aluno['nome']) === strtolower($nomeAluno) && $aluno['turma_id'] === $turmaId) {
+                header('Location: ../pages/alunos.php?erro=ja-existe');
+                exit;
+            }
+        }
+
+        $novoAluno = [
+            'id' => uniqid(),
+            'nome' => $nomeAluno,
+            'turma_id' => $turmaId,
+        ];
+
+        $alunos[] = $novoAluno;
+
+        file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
+
+        header('Location: ../pages/alunos.php?sucesso=ok');
+        exit;
     }
 
-    $novoAluno = [
-        'id' => uniqid(),
-        'nome' => $nomeAluno,
-    ];
+    if (isset($_POST['acao']) && $_POST['acao'] === 'excluir' && isset($_POST['id'])) {
+        if (file_exists($caminhoArquivo)) {
+            $alunos = json_decode(file_get_contents($caminhoArquivo), true);
 
-    $alunos[] = $novoAluno;
+            $alunos = array_filter($alunos, function($aluno) {
+                return $aluno['id'] !== $_POST['id'];
+            });
 
-    file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
+            file_put_contents($caminhoArquivo, json_encode(array_values($alunos), JSON_PRETTY_PRINT));
+        }
 
-    header('Location: ../pages/alunos.php?sucesso=ok');
-    exit;
+        header('Location: ../pages/alunos.php?excluido=ok');
+        exit;
+    }
 }
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['acao'] === 'excluir' && isset($_POST['id'])) {
-    $id = $_POST['id'];
-
-    $alunos = array_filter($alunos, fn($aluno) => $aluno['id'] !== $id);
-    $alunos = array_values($alunos); // reorganiza os índices
-
-    file_put_contents($caminhoArquivo, json_encode($alunos, JSON_PRETTY_PRINT));
-
-    header('Location: ../pages/alunos.php?excluido=ok');
-    exit;
-}
-
-
-header('Location: ../pages/alunos.php');
-exit;

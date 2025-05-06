@@ -12,6 +12,7 @@
             <a href="index.php">Página Inicial</a> |
             <a href="alunos.php">Alunos</a> |
             <a href="turmas.php">Turmas</a> |
+            <a href="alunos_por_turma.php">Alunos por turmas</a> |
             <a href="materias.php">Matérias</a> |
             <a href="resultados.php">Resultados</a> |
         </nav>

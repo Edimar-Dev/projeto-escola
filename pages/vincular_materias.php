@@ -48,7 +48,7 @@
     $materias = file_exists($caminhoMaterias) ? json_decode(file_get_contents($caminhoMaterias), true) : [];
     $turmas   = file_exists($caminhoTurmas)   ? json_decode(file_get_contents($caminhoTurmas), true) : [];
 
-    
+
     $mapMaterias = [];
     foreach ($materias as $materia) {
         $mapMaterias[$materia['id']] = $materia['nome'];
@@ -60,20 +60,29 @@
     }
 
     if (!empty($vinculos)) {
-        echo "<table border='1' cellpadding='5' cellspacing='0'>";
-        echo "<tr><th>Matéria</th><th>Turma</th></tr>";
+        
+        $agrupadoPorTurma = [];
         foreach ($vinculos as $vinculo) {
-            $materiaNome = $mapMaterias[$vinculo['materia_id']] ?? 'Matéria não encontrada';
-            $turmaNome   = $mapTurmas[$vinculo['turma_id']] ?? 'Turma não encontrada';
-
-            echo "<tr><td>$materiaNome</td><td>$turmaNome</td></tr>";
+            $turmaId = $vinculo['turma_id'];
+            $agrupadoPorTurma[$turmaId][] = $vinculo['materia_id'];
         }
-        echo "</table>";
+
+
+        foreach ($agrupadoPorTurma as $turmaId => $materiasDaTurma) {
+            $turmaNome = $mapTurmas[$turmaId] ?? 'Turma não encontrada';
+            echo "<h4>📚 Turma: $turmaNome</h4>";
+            echo "<table border='1' cellpadding='5' cellspacing='0'>";
+            echo "<tr><th>Matéria</th></tr>";
+            foreach ($materiasDaTurma as $materiaId) {
+                $materiaNome = $mapMaterias[$materiaId] ?? 'Matéria não encontrada';
+                echo "<tr><td>$materiaNome</td></tr>";
+            }
+            echo "</table><br>";
+        }
     } else {
         echo "<p>Nenhuma matéria vinculada ainda.</p>";
     }
     ?>
 </div>
-
 
 <?php require_once('../includes/footer.php'); ?>

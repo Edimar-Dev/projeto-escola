@@ -74,7 +74,7 @@
             $turmaNome = $mapTurmas[$turmaId] ?? 'Turma não encontrada';
             echo "<h4>📚 Turma: " . htmlspecialchars($turmaNome) . "</h4>";
             echo "<table border='1' cellpadding='5' cellspacing='0'>";
-            echo "<tr><th>Matéria</th><th>Ação</th></tr>";
+            echo "<tr><th>Matéria</th><th>Remover</th></tr>";
         
             foreach ($materiasDaTurma as $materiaId) {
                 $materiaNome = $mapMaterias[$materiaId] ?? 'Matéria não encontrada';

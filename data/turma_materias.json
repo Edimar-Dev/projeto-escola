@@ -1,54 +1,58 @@
-{
-    "4": {
-        "turma_id": "68191eb1cd1bb",
-        "materia_id": "68191ea70e2af"
-    },
-    "5": {
-        "turma_id": "68191eb1cd1bb",
-        "materia_id": "68191eac26ccb"
-    },
-    "6": {
+[
+    {
         "turma_id": "68191eb1cd1bb",
         "materia_id": "68191ec513b97"
     },
-    "7": {
+    {
         "turma_id": "68191eb1cd1bb",
         "materia_id": "681a6373e14ad"
     },
-    "8": {
+    {
         "turma_id": "68191eb58075c",
         "materia_id": "68191ea70e2af"
     },
-    "9": {
+    {
         "turma_id": "68191eb58075c",
         "materia_id": "68191eac26ccb"
     },
-    "10": {
+    {
         "turma_id": "68191eb58075c",
         "materia_id": "68191ec513b97"
     },
-    "11": {
+    {
         "turma_id": "68191eb58075c",
         "materia_id": "681a6373e14ad"
     },
-    "12": {
+    {
         "turma_id": "68191ebe21e93",
         "materia_id": "68191ea70e2af"
     },
-    "13": {
+    {
         "turma_id": "68191ebe21e93",
         "materia_id": "68191eac26ccb"
     },
-    "14": {
+    {
         "turma_id": "68191ebe21e93",
         "materia_id": "681a6373e14ad"
     },
-    "15": {
+    {
         "turma_id": "68191ebe21e93",
         "materia_id": "68191ec513b97"
     },
-    "16": {
+    {
         "turma_id": "68191ebe21e93",
         "materia_id": "6824e350523d6"
+    },
+    {
+        "turma_id": "68191eb1cd1bb",
+        "materia_id": "6824e350523d6"
+    },
+    {
+        "turma_id": "68191eb58075c",
+        "materia_id": "6824e350523d6"
+    },
+    {
+        "turma_id": "68191eb1cd1bb",
+        "materia_id": "68191ea70e2af"
     }
-}
+]

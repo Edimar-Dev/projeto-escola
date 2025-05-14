@@ -29,9 +29,11 @@
     <br>
     <button type="submit">Vincular</button>
 
-    <?php if (isset($_GET['sucesso'])): ?>
-        <p style="color: green;">Matérias vinculadas com sucesso!</p>
-    <?php endif; ?>
+<?php if (isset($_GET['mensagem'])): ?>
+    <div style="margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ccc;">
+        <?= $_GET['mensagem'] ?>
+    </div>
+<?php endif; ?>
 </form>
 
 <hr>
@@ -70,17 +72,27 @@
 
         foreach ($agrupadoPorTurma as $turmaId => $materiasDaTurma) {
             $turmaNome = $mapTurmas[$turmaId] ?? 'Turma não encontrada';
-            echo "<h4>📚 Turma: $turmaNome</h4>";
+            echo "<h4>📚 Turma: " . htmlspecialchars($turmaNome) . "</h4>";
             echo "<table border='1' cellpadding='5' cellspacing='0'>";
-            echo "<tr><th>Matéria</th></tr>";
+            echo "<tr><th>Matéria</th><th>Remover</th></tr>";
+        
             foreach ($materiasDaTurma as $materiaId) {
                 $materiaNome = $mapMaterias[$materiaId] ?? 'Matéria não encontrada';
-                echo "<tr><td>$materiaNome</td></tr>";
+        
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($materiaNome) . "</td>";
+                echo "<td>
+                        <form method='POST' action='../actions/DesvincularController.php' onsubmit=\"return confirm('Deseja realmente desvincular esta matéria da turma?');\" style='display:inline;'>
+                            <input type='hidden' name='turma_id' value='{$turmaId}'>
+                            <input type='hidden' name='materia_id' value='{$materiaId}'>
+                            <button type='submit'>Desvincular</button>
+                        </form>
+                      </td>";
+                echo "</tr>";
             }
+        
             echo "</table><br>";
         }
-    } else {
-        echo "<p>Nenhuma matéria vinculada ainda.</p>";
     }
     ?>
 </div>

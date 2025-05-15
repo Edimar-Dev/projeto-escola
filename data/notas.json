@@ -1,14 +1,14 @@
 [
     {
-        "id": "68261ebc40731",
+        "id": "682645cf086ff",
         "aluno_id": "681a62db56ec2",
-        "materia_id": "68191ea70e2af",
+        "materia_id": "68191eac26ccb",
         "turma_id": "68191eb1cd1bb",
         "notas": [
             5,
+            7,
             3,
-            8,
-            8
+            5
         ]
     }
 ]

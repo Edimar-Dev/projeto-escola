@@ -3,21 +3,28 @@
 <h3>CADASTRAR NOTAS</h3>
 
 <?php
-
 $alunos = json_decode(file_get_contents(__DIR__ . '/../data/alunos.json'), true) ?? [];
 $materias = json_decode(file_get_contents(__DIR__ . '/../data/materias.json'), true) ?? [];
 $turmas = json_decode(file_get_contents(__DIR__ . '/../data/turmas.json'), true) ?? [];
 ?>
 
-<?php if (isset($_GET['sucesso'])): ?>
+
+<?php if (isset($_GET['erro'])): ?>
+    <?php if ($_GET['erro'] === 'sem-notas'): ?>
+        <p style="color: red;">Erro: As notas não foram informadas corretamente.</p>
+    <?php elseif ($_GET['erro'] === 'quantidade-notas'): ?>
+        <p style="color: red;">Erro: Devem ser informadas exatamente 4 notas.</p>
+    <?php elseif ($_GET['erro'] === 'nota-invalida'): ?>
+        <p style="color: red;">Erro: Cada nota deve estar entre 0 e 10.</p>
+    <?php else: ?>
+        <p style="color: red;">Erro desconhecido.</p>
+    <?php endif; ?>
+<?php elseif (isset($_GET['sucesso'])): ?>
     <p style="color: green;">Nota cadastrada com sucesso!</p>
-<?php elseif (isset($_GET['erro']) && $_GET['erro'] === 'sem-notas'): ?>
-    <p style="color: red;">Erro: As notas não foram informadas corretamente.</p>
 <?php endif; ?>
 
 <form action="../actions/NotaController.php" method="POST">
     <input type="hidden" name="acao" value="cadastrar">
-
 
     <label>Aluno:</label>
     <select name="aluno_id" id="aluno_id" required>
@@ -28,7 +35,6 @@ $turmas = json_decode(file_get_contents(__DIR__ . '/../data/turmas.json'), true)
             </option>
         <?php endforeach; ?>
     </select>
-
 
     <label>Turma:</label>
     <input type="text" id="turma_exibida" readonly>
@@ -132,9 +138,7 @@ if (!empty($notas)):
     <p>Nenhuma nota cadastrada ainda.</p>
 <?php endif ?>
 
-
 <?php
-
 $turmaNomes = [];
 foreach ($turmas as $turma) {
     $turmaNomes[$turma['id']] = $turma['nome'];

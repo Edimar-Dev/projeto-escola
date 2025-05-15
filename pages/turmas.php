@@ -9,16 +9,16 @@
         <button type="submit">Cadastrar</button>
 
         <?php if (isset($_GET['erro']) && $_GET['erro'] === 'ja-existe'): ?>
-        <p style="color: red;">Essa turma já foi cadastrada!</p>
+            <p style="color: red;">Essa turma já foi cadastrada!</p>
         <?php endif; ?>
 
         <?php if (isset($_GET['sucesso'])): ?>
-        <p style="color: green;">Turma cadastrada com sucesso!</p>
+            <p style="color: green;">Turma cadastrada com sucesso!</p>
         <?php endif; ?>
-    </form> 
+    </form>
 </div>
-<?php
 
+<?php
 $caminhoArquivo = __DIR__ . '/../data/turmas.json';
 
 if (file_exists($caminhoArquivo)) {
@@ -26,17 +26,24 @@ if (file_exists($caminhoArquivo)) {
     $turmas = json_decode($conteudo, true);
 
     if (!empty($turmas)) {
-        echo "<ul>";
+        echo "<h4>📋 Lista de Turmas Cadastradas</h4>";
+        echo "<table border='1' cellpadding='10' cellspacing='0'>";
+        echo "<tr><th>Turma</th><th>Remover</th></tr>";
+
         foreach ($turmas as $turma) {
-            echo "<li>" . htmlspecialchars($turma['nome']) . 
-                " <form action='../actions/TurmaController.php' method='POST' style='display:inline;'>
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($turma['nome']) . "</td>";
+            echo "<td>
+                <form action='../actions/TurmaController.php' method='POST' onsubmit='return confirm(\"Tem certeza que deseja excluir esta turma?\");'>
                     <input type='hidden' name='acao' value='excluir'>
                     <input type='hidden' name='id' value='" . htmlspecialchars($turma['id']) . "'>
-                    <button type='submit' onclick='return confirm(\"Tem certeza que deseja excluir esta turma?\")'>Excluir</button>
+                    <button type='submit'>Excluir</button>
                 </form>
-                </li>";
+            </td>";
+            echo "</tr>";
         }
-        echo "</ul>";
+
+        echo "</table>";
     } else {
         echo "<p>Nenhuma turma cadastrada ainda.</p>";
     }
@@ -45,5 +52,4 @@ if (file_exists($caminhoArquivo)) {
 }
 ?>
 
-
-<?php require_once('../includes/footer.php')?>
+<?php require_once('../includes/footer.php'); ?>

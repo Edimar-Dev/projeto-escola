@@ -9,16 +9,16 @@
         <button type="submit">Cadastrar</button>
 
         <?php if (isset($_GET['erro']) && $_GET['erro'] === 'ja-existe'): ?>
-        <p style="color: red;">Essa matéria já foi cadastrada!</p>
+            <p style="color: red;">Essa matéria já foi cadastrada!</p>
         <?php endif; ?>
 
         <?php if (isset($_GET['sucesso'])): ?>
-        <p style="color: green;">Matéria cadastrada com sucesso!</p>
+            <p style="color: green;">Matéria cadastrada com sucesso!</p>
         <?php endif; ?>
     </form>
 </div>
-<?php
 
+<?php
 $caminhoArquivo = __DIR__ . '/../data/materias.json';
 
 if (file_exists($caminhoArquivo)) {
@@ -26,17 +26,24 @@ if (file_exists($caminhoArquivo)) {
     $materias = json_decode($conteudo, true);
 
     if (!empty($materias)) {
-        echo "<ul>";
+        echo "<h4>📘 Lista de Matérias Cadastradas</h4>";
+        echo "<table border='1' cellpadding='10' cellspacing='0'>";
+        echo "<tr><th>Matéria</th><th>Remover</th></tr>";
+
         foreach ($materias as $materia) {
-            echo "<li>" . htmlspecialchars($materia['nome']) . "
-                <form action='../actions/MateriaController.php' method='POST' style='display:inline; margin-left:10px;'>
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($materia['nome']) . "</td>";
+            echo "<td>
+                <form action='../actions/MateriaController.php' method='POST' onsubmit='return confirm(\"Tem certeza que deseja excluir esta matéria?\");'>
                     <input type='hidden' name='acao' value='excluir'>
                     <input type='hidden' name='id' value='" . htmlspecialchars($materia['id']) . "'>
-                    <button type='submit' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</button>
+                    <button type='submit'>Excluir</button>
                 </form>
-            </li>";
+            </td>";
+            echo "</tr>";
         }
-        echo "</ul>";
+
+        echo "</table>";
     } else {
         echo "<p>Nenhuma matéria cadastrada ainda.</p>";
     }

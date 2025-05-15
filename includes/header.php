@@ -15,6 +15,7 @@
             <a href="alunos_por_turma.php">Alunos por turmas</a> |
             <a href="materias.php">Matérias</a> |
             <a href="vincular_materias.php">Matérias Turmas</a> |
-            <a href="resultados.php">Resultados</a> |
+            <a href="notas.php">Notas</a> |
+            <a href="resultados.php">Resultados</a> 
         </nav>
     </header>

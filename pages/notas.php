@@ -3,24 +3,18 @@
 <h3>CADASTRAR NOTAS</h3>
 
 <?php
+
 $alunos = json_decode(file_get_contents(__DIR__ . '/../data/alunos.json'), true) ?? [];
 $materias = json_decode(file_get_contents(__DIR__ . '/../data/materias.json'), true) ?? [];
 $turmas = json_decode(file_get_contents(__DIR__ . '/../data/turmas.json'), true) ?? [];
 ?>
 
-
-<?php if (isset($_GET['erro'])): ?>
-    <?php if ($_GET['erro'] === 'sem-notas'): ?>
-        <p style="color: red;">Erro: As notas não foram informadas corretamente.</p>
-    <?php elseif ($_GET['erro'] === 'quantidade-notas'): ?>
-        <p style="color: red;">Erro: Devem ser informadas exatamente 4 notas.</p>
-    <?php elseif ($_GET['erro'] === 'nota-invalida'): ?>
-        <p style="color: red;">Erro: Cada nota deve estar entre 0 e 10.</p>
-    <?php else: ?>
-        <p style="color: red;">Erro desconhecido.</p>
-    <?php endif; ?>
-<?php elseif (isset($_GET['sucesso'])): ?>
+<?php if (isset($_GET['sucesso'])): ?>
     <p style="color: green;">Nota cadastrada com sucesso!</p>
+<?php elseif (isset($_GET['erro']) && $_GET['erro'] === 'sem-notas'): ?>
+    <p style="color: red;">Erro: As notas não foram informadas corretamente.</p>
+<?php elseif (isset($_GET['excluido']) && $_GET['excluido'] === '1'): ?>
+    <p style="color: green;">Nota excluída com sucesso!</p>
 <?php endif; ?>
 
 <form action="../actions/NotaController.php" method="POST">
@@ -74,14 +68,29 @@ $turmas = json_decode(file_get_contents(__DIR__ . '/../data/turmas.json'), true)
 $arquivoNotas = __DIR__ . '/../data/notas.json';
 $notas = file_exists($arquivoNotas) ? json_decode(file_get_contents($arquivoNotas), true) : [];
 
-if (!empty($notas)):
+
+$notasPorTurma = [];
+
+foreach ($notas as $nota) {
+    $notasPorTurma[$nota['turma_id']][] = $nota;
+}
+
+if (!empty($notasPorTurma)):
+    foreach ($notasPorTurma as $turmaId => $notasTurma):
+        $turmaNome = 'Turma não encontrada';
+        foreach ($turmas as $t) {
+            if ($t['id'] === $turmaId) {
+                $turmaNome = $t['nome'];
+                break;
+            }
+        }
 ?>
+    <h4><?= htmlspecialchars($turmaNome) ?></h4>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
             <tr>
                 <th>Aluno</th>
                 <th>Matéria</th>
-                <th>Turma</th>
                 <th>Nota 1</th>
                 <th>Nota 2</th>
                 <th>Nota 3</th>
@@ -90,10 +99,9 @@ if (!empty($notas)):
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($notas as $nota): 
+            <?php foreach ($notasTurma as $nota): 
                 $alunoNome = '';
                 $materiaNome = '';
-                $turmaNome = '';
 
                 foreach ($alunos as $a) {
                     if ($a['id'] === $nota['aluno_id']) {
@@ -108,18 +116,10 @@ if (!empty($notas)):
                         break;
                     }
                 }
-
-                foreach ($turmas as $t) {
-                    if ($t['id'] === $nota['turma_id']) {
-                        $turmaNome = $t['nome'];
-                        break;
-                    }
-                }
             ?>
                 <tr>
                     <td><?= htmlspecialchars($alunoNome) ?></td>
                     <td><?= htmlspecialchars($materiaNome) ?></td>
-                    <td><?= htmlspecialchars($turmaNome) ?></td>
                     <?php for ($i = 0; $i < 4; $i++): ?>
                         <td><?= $nota['notas'][$i] ?? '-' ?></td>
                     <?php endfor; ?>
@@ -134,7 +134,11 @@ if (!empty($notas)):
             <?php endforeach ?>
         </tbody>
     </table>
-<?php else: ?>
+    <br><br>
+<?php 
+    endforeach;
+else:
+?>
     <p>Nenhuma nota cadastrada ainda.</p>
 <?php endif ?>
 
